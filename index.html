@@ -282,6 +282,7 @@ let splashParticles = [];
 let animId = null;
 let lastObstacleFrame = 0;
 let frozenScore = 0;
+let frozenSpeed = 1;
 let deathTimeout = null;
 let gameOverHandled = false;
 let shake = 0;
@@ -681,6 +682,7 @@ function triggerCrash() {
   crashPhase = true;
   state = 'crashing';
   frozenScore = score;
+  frozenSpeed = speed;
   speed = 0;
   renderPlayer = false;
   shake = 20;
@@ -779,6 +781,7 @@ function startGame() {
   playerLane = 1;
   lastObstacleFrame = 0;
   frozenScore = 0;
+  frozenSpeed = 1;
   shake = 0;
   crashPhase = false;
   gameOverHandled = false;
@@ -832,7 +835,8 @@ function endGame() {
   startBtn.innerHTML = 'TRY AGAIN <span class="endscreen-boat-emoji">🚤</span>';
 
   scoreDisplay.innerHTML = `
-    🏆 Best: ${highScore}
+    🏆 Best: ${highScore}<br>
+    ⚡ Speed: ${frozenSpeed.toFixed(2)}x
     <span class="death-note">
       Press F5 (Mac: ⌘ + R) or refresh the page to view controls
     </span>
@@ -853,6 +857,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
