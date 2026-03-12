@@ -795,10 +795,11 @@ function startGame() {
     <strong>Mobile:</strong> Swipe left and right on screen<br>
     <strong>Desktop:</strong> Arrow keys ← → or A (left) and D (right)
   `;
-  startBtn.textContent = 'START  RACE   🚤';
+  startBtn.innerHTML = 'START  RACE<span class="boat-emoji">🚤</span>';
   scoreDisplay.textContent = '';
 
   overlay.style.display = 'none';
+  ui.style.display = 'grid';
   restartBtn.style.display = 'block';
 
   state = 'playing';
@@ -857,6 +858,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
