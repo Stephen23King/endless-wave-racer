@@ -159,7 +159,7 @@
   .death-note {
     display: block;
     margin-top: 8px;
-    font-size: 0.5em;
+    font-size: 0.65em;
     line-height: 1.45;
     color: #c7ebff;
     opacity: 0.95;
@@ -742,13 +742,13 @@ function startGame() {
 
   createWaveRows();
 
-  overlayTitle.textContent = '🌊 Wave Racer';
+  overlayTitle.textContent = '🌊 Endless Wave Racer';
   overlayText.innerHTML = `
     Dodge rocks, waves & debris!<br>
-    <strong>Mobile:</strong> Tap left / right half of screen<br>
-    <strong>Desktop:</strong> Arrow keys ← →
+    <strong>Mobile:</strong> Swipe left and right on screen<br>
+    <strong>Desktop:</strong> Arrow keys ← → or A (left) and D (right)
   `;
-  startBtn.textContent = 'START RACE 🚤';
+  startBtn.textContent = 'START  RACE   🚤';
   scoreDisplay.textContent = '';
 
   overlay.style.display = 'none';
@@ -810,3 +810,4 @@ drawDeadScreen();
 </body>
 
 </html>
+
