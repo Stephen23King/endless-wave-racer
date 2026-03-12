@@ -123,10 +123,13 @@
     box-shadow: 0 2px 12px rgba(0,150,255,0.4);
   }
  
-.boat-emoji {
-  font-size: 1.6em;
+ .boat-emoji {
+    font-size: 1.7em;
   }
  
+ .endscreen-boat-emoji {
+    font-size: 1.7em;
+  }
   #score-display {
     font-size: clamp(0.95em, 3.5vw, 1.15em);
     color: #7fffff;
@@ -790,7 +793,7 @@ function endGame() {
 
   overlayTitle.textContent = '💥 Wiped Out!';
   overlayText.innerHTML = `You scored <strong>${frozenScore}</strong> points!`;
-  startBtn.textContent = 'TRY AGAIN 🚤';
+  startBtn.innerHTML = 'TRY AGAIN <span class="endscreen-boat-emoji">🚤</span>';
 
   scoreDisplay.innerHTML = `
     🏆 Best: ${highScore}
@@ -814,5 +817,6 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
