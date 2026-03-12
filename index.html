@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#001f5b">
-<title>Wave Racer 🌊</title>
+<title>Wave Racer ðŸŒŠ</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -136,20 +136,20 @@
 
   <div id="ui">
     <span id="scoreLabel">Score: 0</span>
-    <button id="restartBtn">↺ RESTART</button>
+    <button id="restartBtn">â†º RESTART</button>
     <span id="speedLabel">Speed: 1.0x</span>
   </div>
 
-  <div id="tapLeft"><span class="tap-hint">◀</span></div>
-  <div id="tapRight"><span class="tap-hint">▶</span></div>
+  <div id="tapLeft"><span class="tap-hint">â—€</span></div>
+  <div id="tapRight"><span class="tap-hint">â–¶</span></div>
 
   <div id="overlay">
-    <h1>🌊 Wave Racer</h1>
+    <h1>ðŸŒŠ Wave Racer</h1>
     <p>Dodge rocks, waves & debris!<br>
       <strong>Mobile:</strong> Tap left / right half of screen<br>
-      <strong>Desktop:</strong> Arrow keys ← →
+      <strong>Desktop:</strong> Arrow keys â† â†’
     </p>
-    <button id="startBtn">START RACE 🚤</button>
+    <button id="startBtn">START RACE ðŸš¤</button>
     <div id="score-display"></div>
   </div>
 </div>
@@ -175,7 +175,7 @@ function resize() {
 resize();
 window.addEventListener('resize', () => { resize(); createWaveRows(); });
 
-// ─── State ────────────────────────────────────────────
+// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let state = 'idle';
 let score = 0;
 let highScore = parseInt(localStorage.getItem('wr_hi') || '0');
@@ -188,26 +188,26 @@ let animId = null;
 let lastObstacleFrame = 0;
 let frozenScore = 0; // score locked at death
 
-// ─── Speed curve ─────────────────────────────────────
-// Phase 1 (score 0–1500): fast linear ramp 1x → ~4x
-// Phase 2 (score 1500+): very gradual, gentle slope — like a long shallow hill
+// â”€â”€â”€ Speed curve â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Phase 1 (score 0â€“1500): fast linear ramp 1x â†’ ~4x
+// Phase 2 (score 1500+): very gradual, gentle slope â€” like a long shallow hill
 function calcSpeed(s) {
   if (s <= 1500) {
     return 1 + (s / 1500) * 3.0; // ramps to 4.0 at score 1500
   } else {
-    // Gentle logarithmic increase — barely noticeable slope
-    // At 1500 = 4.0, at 3000 ≈ 4.35, at 6000 ≈ 4.7, at 15000 ≈ 5.1
+    // Gentle logarithmic increase â€” barely noticeable slope
+    // At 1500 = 4.0, at 3000 â‰ˆ 4.35, at 6000 â‰ˆ 4.7, at 15000 â‰ˆ 5.1
     return 4.0 + Math.log((s - 1500) / 300 + 1) * 0.28;
   }
 }
 
-// ─── Resize / lane ────────────────────────────────────
+// â”€â”€â”€ Resize / lane â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const LANES = 3;
 function laneX(lane) {
   return (canvas.width / LANES) * lane + (canvas.width / LANES) / 2;
 }
 
-// ─── Draw jet ski ─────────────────────────────────────
+// â”€â”€â”€ Draw jet ski â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function drawJetSki(x, y, wobble) {
   const s = Math.min(canvas.width, canvas.height) / 480;
   ctx.save();
@@ -242,7 +242,7 @@ function drawJetSki(x, y, wobble) {
   ctx.restore();
 }
 
-// ─── Ocean ────────────────────────────────────────────
+// â”€â”€â”€ Ocean â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function createWaveRows() {
   waveRows = [];
   for (let i = 0; i < 24; i++) {
@@ -278,7 +278,7 @@ function drawOcean() {
   ctx.setLineDash([]);
 }
 
-// ─── Obstacles ────────────────────────────────────────
+// â”€â”€â”€ Obstacles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const OBSTACLE_TYPES = [
   { type: 'rock',    w: 44, h: 32 },
   { type: 'bigwave', w: 64, h: 28 },
@@ -356,7 +356,7 @@ function drawObstacle(ob) {
   ctx.restore();
 }
 
-// ─── Particles ────────────────────────────────────────
+// â”€â”€â”€ Particles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function spawnParticles(x, y) {
   for (let i = 0; i < 30; i++) {
     const angle = Math.random() * Math.PI * 2;
@@ -380,7 +380,7 @@ function updateParticles() {
   ctx.globalAlpha = 1;
 }
 
-// ─── Input ────────────────────────────────────────────
+// â”€â”€â”€ Input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function moveLeft()  { if (state==='playing') targetLane = Math.max(0, targetLane-1); }
 function moveRight() { if (state==='playing') targetLane = Math.min(LANES-1, targetLane+1); }
 
@@ -404,14 +404,14 @@ document.addEventListener('keydown', e => {
   if (e.key==='ArrowRight' || e.key==='d' || e.key==='D') moveRight();
 });
 
-// ─── Collision ────────────────────────────────────────
+// â”€â”€â”€ Collision â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function checkCollision(ob) {
   const dx = Math.abs(ob.x - playerX);
   const dy = Math.abs(ob.y - playerY);
   return dx < (ob.w/2+14) && dy < (ob.h/2+18);
 }
 
-// ─── Game loop ────────────────────────────────────────
+// â”€â”€â”€ Game loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function gameLoop() {
   frame++;
   score++;                         // increment live score
@@ -451,7 +451,7 @@ function gameLoop() {
   animId = requestAnimationFrame(gameLoop);
 }
 
-// ─── Start / End ──────────────────────────────────────
+// â”€â”€â”€ Start / End â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function startGame() {
   score = 0; speed = 1; frame = 0;
   obstacles = []; particles = [];
@@ -473,10 +473,10 @@ function endGame() {
     highScore = frozenScore;
     localStorage.setItem('wr_hi', highScore);
   }
-  overlayTitle.textContent = '💥 Wiped Out!';
+  overlayTitle.textContent = 'ðŸ’¥ Wiped Out!';
   overlayText.innerHTML = `You scored <strong>${frozenScore}</strong> points!<br>Can you beat it?`;
-  startBtn.textContent = 'TRY AGAIN 🚤';
-  scoreDisplay.textContent = `🏆 Best: ${highScore}`;
+  startBtn.textContent = 'TRY AGAIN ðŸš¤';
+  scoreDisplay.textContent = `ðŸ† Best: ${highScore}`;
   overlay.style.display = 'flex';
   // freeze display at death score
   scoreLabel.textContent = `Score: ${frozenScore}`;
