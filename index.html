@@ -122,7 +122,11 @@
     transform: scale(0.94);
     box-shadow: 0 2px 12px rgba(0,150,255,0.4);
   }
-
+ 
+.boat-emoji {
+  font-size: 1.6em;
+  }
+ 
   #score-display {
     font-size: clamp(0.95em, 3.5vw, 1.15em);
     color: #7fffff;
@@ -187,13 +191,13 @@
   <div id="tapRight"><span class="tap-hint">▶</span></div>
 
   <div id="overlay">
-    <h1>🌊 Wave Racer</h1>
+    <h1>🌊 Endless Wave Racer</h1>
     <p>
       Dodge rocks, waves & debris!<br>
-      <strong>Mobile:</strong> Tap left / right half of screen<br>
-      <strong>Desktop:</strong> Arrow keys ← →
+      <strong>Mobile:</strong> Swipe left and right on screen<br>
+      <strong>Desktop:</strong> Arrow keys ← → or A (left) and D (right)
     </p>
-    <button id="startBtn">START RACE 🚤</button>
+    <button id="startBtn">START  RACE   <span class="boat-emoji">🚤</span></button>
     <div id="score-display"></div>
   </div>
 </div>
@@ -810,4 +814,5 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
