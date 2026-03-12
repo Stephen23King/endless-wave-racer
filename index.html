@@ -59,16 +59,19 @@
     column-gap: 12px;
   }
  
-   #scoreLabel {
+  #scoreLabel {
+    grid-column: 1;
     justify-self: start;
     min-width: 160px;
   }
-
+  
   #restartBtn {
+    grid-column: 2;
     justify-self: center;
   }
-
+  
   #speedLabel {
+    grid-column: 3;
     justify-self: end;
     min-width: 160px;
     text-align: right;
@@ -793,7 +796,6 @@ function startGame() {
   scoreDisplay.textContent = '';
 
   overlay.style.display = 'none';
-  ui.style.display = 'grid';
   restartBtn.style.display = 'block';
 
   state = 'playing';
@@ -851,6 +853,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
