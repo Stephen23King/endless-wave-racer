@@ -342,6 +342,7 @@ window.addEventListener('resize', () => {
 let state = 'idle';
 let score = 0;
 let highScore = parseInt(localStorage.getItem('wr_hi') || '0', 10);
+let bestSpeed = parseFloat(localStorage.getItem('wr_hi_speed') || '1');
 let speed = 1;
 let frame = 0;
 let playerX = 0, playerY = 0;
@@ -904,7 +905,9 @@ function endGame() {
 
   if (frozenScore > highScore) {
     highScore = frozenScore;
+    bestSpeed = frozenSpeed;
     localStorage.setItem('wr_hi', String(highScore));
+    localStorage.setItem('wr_hi_speed', String(bestSpeed));
   }
 
   ui.style.display = 'none';
@@ -928,7 +931,7 @@ function endGame() {
 
   scoreDisplay.innerHTML = `
     🏆 Best: ${highScore}<br>
-    ⚡ Speed: ${frozenSpeed.toFixed(2)}x
+    ⚡ Best speed: ${bestSpeed.toFixed(2)}x
     <span class="death-note">
       Press F5 (Mac: ⌘ + R) or refresh the page to view controls
     </span>
@@ -949,6 +952,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
