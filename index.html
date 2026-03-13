@@ -792,7 +792,7 @@ function gameLoop() {
   } else if (state === 'crashing') {
     score = frozenScore;
     scoreLabel.textContent = `Score: ${frozenScore}`;
-    speedLabel.textContent = `Speed: ${speed.toFixed(2)}x`;
+    speedLabel.textContent = `Speed: ${frozenSpeed.toFixed(2)}x`;
   }
 
   ctx.save();
@@ -946,6 +946,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
