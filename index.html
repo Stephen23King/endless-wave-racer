@@ -237,7 +237,7 @@
       <strong>Mobile:</strong> Swipe left and right on screen<br>
       <strong>Desktop:</strong> Arrow keys ← → or A (left) and D (right)
     </p>
-    <button id="startBtn">START  RACE   <span class="boat-emoji">🚤</span></button>
+    <button id="startBtn">START  RACE<span class="boat-emoji">🚤</span></button>
     <div id="score-display"></div>
   </div>
 </div>
@@ -256,6 +256,75 @@ const overlayText = overlay.querySelector('p');
 const tapLeft = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
 const ui = document.getElementById('ui');
+
+// ───────────────── Audio ─────────────────
+const bgMusic = new Audio('ewr-game-music.mp3');
+bgMusic.loop = true;
+bgMusic.preload = 'auto';
+bgMusic.volume = 0.55;
+
+const waterLoop = new Audio('ewr-water.mp3');
+waterLoop.loop = true;
+waterLoop.preload = 'auto';
+waterLoop.volume = 0.12;
+
+const crashSfx = new Audio('ewr-crash.mp3');
+crashSfx.preload = 'auto';
+crashSfx.volume = 0.8;
+
+const restartSfx = new Audio('ewr-all-restarts.mp3');
+restartSfx.preload = 'auto';
+restartSfx.volume = 0.7;
+
+const moveSfxPool = Array.from({ length: 4 }, () => {
+  const a = new Audio('ewr-move.mp3');
+  a.preload = 'auto';
+  a.volume = 0.45;
+  return a;
+});
+let moveSfxIndex = 0;
+
+function safePlay(audio, restart = false) {
+  if (restart) audio.currentTime = 0;
+  const playPromise = audio.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(() => {});
+  }
+}
+
+function ensureWaterLoop() {
+  if (waterLoop.paused) {
+    safePlay(waterLoop);
+  }
+}
+
+function startGameplayMusic() {
+  bgMusic.currentTime = 0;
+  safePlay(bgMusic, true);
+}
+
+function stopGameplayMusic() {
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+}
+
+function playCrashSfx() {
+  crashSfx.currentTime = 0;
+  safePlay(crashSfx, true);
+}
+
+function playRestartSfx() {
+  restartSfx.currentTime = 0;
+  safePlay(restartSfx, true);
+}
+
+function playMoveSfx() {
+  if (state !== 'playing') return;
+  const a = moveSfxPool[moveSfxIndex];
+  moveSfxIndex = (moveSfxIndex + 1) % moveSfxPool.length;
+  a.currentTime = 0;
+  safePlay(a, true);
+}
 
 function resize() {
   canvas.width = window.innerWidth;
@@ -629,11 +698,21 @@ function updateSplash() {
 
 // ───────────────── Input ─────────────────
 function moveLeft() {
-  if (state === 'playing') targetLane = Math.max(0, targetLane - 1);
+  if (state !== 'playing') return;
+  const nextLane = Math.max(0, targetLane - 1);
+  if (nextLane !== targetLane) {
+    targetLane = nextLane;
+    playMoveSfx();
+  }
 }
 
 function moveRight() {
-  if (state === 'playing') targetLane = Math.min(LANES - 1, targetLane + 1);
+  if (state !== 'playing') return;
+  const nextLane = Math.min(LANES - 1, targetLane + 1);
+  if (nextLane !== targetLane) {
+    targetLane = nextLane;
+    playMoveSfx();
+  }
 }
 
 let touchStartX = null, touchStartY = null;
@@ -683,6 +762,10 @@ function triggerCrash() {
   state = 'crashing';
   frozenScore = score;
   frozenSpeed = speed;
+  
+  stopGameplayMusic();
+  playCrashSfx();
+  
   speed = 0;
   renderPlayer = false;
   shake = 20;
@@ -801,7 +884,11 @@ function startGame() {
   overlay.style.display = 'none';
   ui.style.display = 'grid';
   restartBtn.style.display = 'block';
-
+  
+  ensureWaterLoop();
+  playRestartSfx();
+  startGameplayMusic();
+  
   state = 'playing';
   gameLoop();
 }
@@ -813,6 +900,7 @@ function endGame() {
 
   clearTimeout(deathTimeout);
   cancelAnimationFrame(animId);
+  stopGameplayMusic();
 
   if (frozenScore > highScore) {
     highScore = frozenScore;
@@ -858,6 +946,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
