@@ -279,7 +279,7 @@ restartSfx.volume = 0.7;
 const moveSfxPool = Array.from({ length: 4 }, () => {
   const a = new Audio('ewr-move.mp3');
   a.preload = 'auto';
-  a.volume = 0.1;
+  a.volume = 0.001;
   return a;
 });
 let moveSfxIndex = 0;
@@ -953,6 +953,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
