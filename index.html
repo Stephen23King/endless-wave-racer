@@ -931,7 +931,7 @@ function endGame() {
   startBtn.innerHTML = 'TRY AGAIN <span class="endscreen-boat-emoji">🚤</span>';
 
   scoreDisplay.innerHTML = `
-    🏆 Best: ${highScore}<br>
+    🏆 Best score: ${highScore}<br>
     ⚡ Best speed: ${bestSpeed !== null ? bestSpeed.toFixed(2) + 'x' : '—'}
     <span class="death-note">
       Press F5 (Mac: ⌘ + R) or refresh the page to view controls
@@ -953,6 +953,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
