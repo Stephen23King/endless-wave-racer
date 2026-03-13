@@ -266,7 +266,7 @@ bgMusic.volume = 0.55;
 const waterLoop = new Audio('ewr-water.mp3');
 waterLoop.loop = true;
 waterLoop.preload = 'auto';
-waterLoop.volume = 0.12;
+waterLoop.volume = 0.072;
 
 const crashSfx = new Audio('ewr-crash.mp3');
 crashSfx.preload = 'auto';
@@ -920,7 +920,10 @@ function endGame() {
   drawDeadScreen();
 
   overlayTitle.textContent = '💥 Wiped Out!';
-  overlayText.innerHTML = `You scored <strong>${frozenScore}</strong> points!`;
+  overlayText.innerHTML = `
+  You scored <strong>${frozenScore}</strong> points!<br>
+  Speed at crash <strong>${frozenSpeed.toFixed(2)}x</strong>
+  `;
   startBtn.innerHTML = 'TRY AGAIN <span class="endscreen-boat-emoji">🚤</span>';
 
   scoreDisplay.innerHTML = `
@@ -946,6 +949,7 @@ drawDeadScreen();
 </body>
 
 </html>
+
 
 
 
