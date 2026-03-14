@@ -766,6 +766,7 @@ function moveLeft() {
   if (nextLane !== targetLane) {
     targetLane = nextLane;
     playMoveSfx();
+    flashControl(tapLeft);
   }
 }
 
@@ -775,40 +776,30 @@ function moveRight() {
   if (nextLane !== targetLane) {
     targetLane = nextLane;
     playMoveSfx();
+    flashControl(tapRight);
   }
 }
 
-let touchStartX = null, touchStartY = null;
-
-document.addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchend', e => {
-  if (state !== 'playing') return;
-
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const dy = e.changedTouches[0].clientY - touchStartY;
-
-  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
-    dx < 0 ? moveLeft() : moveRight();
-  }
-}, { passive: true });
-
-tapLeft.addEventListener('touchstart', e => {
-  e.stopPropagation();
+tapLeft.addEventListener('pointerdown', e => {
+  e.preventDefault();
   moveLeft();
-}, { passive: true });
+});
 
-tapRight.addEventListener('touchstart', e => {
-  e.stopPropagation();
+tapRight.addEventListener('pointerdown', e => {
+  e.preventDefault();
   moveRight();
-}, { passive: true });
+});
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveLeft();
-  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveRight();
+  if (e.repeat) return;
+
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+    moveLeft();
+  }
+
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+    moveRight();
+  }
 });
 
 // ───────────────── Collision ─────────────────
@@ -947,6 +938,7 @@ function startGame() {
   overlay.style.display = 'none';
   ui.style.display = 'grid';
   restartBtn.style.display = 'block';
+  controls.style.display = 'flex';
   
   ensureWaterLoop();
   playRestartSfx();
@@ -974,6 +966,7 @@ function endGame() {
 
   ui.style.display = 'none';
   restartBtn.style.display = 'none';
+  controls.style.display = 'none';
 
   score = frozenScore;
   speed = 0;
@@ -1010,6 +1003,7 @@ restartBtn.addEventListener('click', startGame);
 
 createWaveRows();
 drawDeadScreen();
+controls.style.display = 'none';
 </script>
 </body>
 
