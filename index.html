@@ -193,26 +193,26 @@
     justify-content: center;
   }
   
-  .control-btn {
+    .control-btn {
     width: clamp(74px, 14vw, 110px);
     height: clamp(74px, 14vw, 110px);
     border-radius: 22px;
     border: 2px solid rgba(255,255,255,0.45);
     background: rgba(255,255,255,0.12);
     color: #ffffff;
-    font-size: clamp(2.2rem, 7vw, 3.6rem);
+    font-size: clamp(2.8rem, 8vw, 4.4rem);
     font-weight: 900;
     line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-  
     user-select: none;
     -webkit-user-select: none;
     -webkit-appearance: none;
-  
     backdrop-filter: blur(4px);
+    position: relative;
+    overflow: hidden;
   
     box-shadow:
       0 6px 18px rgba(0,0,0,0.25),
@@ -236,6 +236,26 @@
     box-shadow:
       0 2px 8px rgba(0,0,0,0.25),
       0 0 16px rgba(120,220,255,0.9);
+  }
+
+   .control-btn .ripple {
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.35);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    animation: rippleBurst 0.42s ease-out forwards;
+  }
+  
+  @keyframes rippleBurst {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.65;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
   }
   
   .death-note {
@@ -392,9 +412,25 @@ let lastMoveSoundTime = 0;
 
 function flashControl(btn) {
   btn.classList.add('pressed');
+
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+
+  const size = Math.max(btn.clientWidth, btn.clientHeight) * 1.35;
+  ripple.style.width = size + 'px';
+  ripple.style.height = size + 'px';
+  ripple.style.left = '50%';
+  ripple.style.top = '50%';
+
+  btn.appendChild(ripple);
+
   setTimeout(() => {
     btn.classList.remove('pressed');
   }, controlPressMs);
+
+  setTimeout(() => {
+    ripple.remove();
+  }, 420);
 }
 
 // ───────────────── State ─────────────────
