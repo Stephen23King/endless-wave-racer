@@ -180,30 +180,64 @@
     line-height: 1.45;
   }
 
-  #tapLeft, #tapRight {
+  #controls {
     position: absolute;
-    bottom: 0;
-    width: 50%;
-    height: 35%;
-    z-index: 5;
-    display: flex;
-    align-items: flex-end;
+    left: 50%;
+    bottom: max(26px, env(safe-area-inset-bottom, 26px));
+    transform: translateX(-50%);
+    display: none;
+    gap: clamp(18px, 4vw, 34px);
+    z-index: 15;
+    pointer-events: auto;
+    align-items: center;
     justify-content: center;
-    padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
-    opacity: 0;
-    pointer-events: none;
   }
-
-  #tapLeft { left: 0; }
-  #tapRight { right: 0; }
-
-  .tap-hint {
-    color: rgba(255,255,255,0.18);
-    font-size: clamp(1.8em, 8vw, 3em);
+  
+  .control-btn {
+    width: clamp(74px, 14vw, 110px);
+    height: clamp(74px, 14vw, 110px);
+    border-radius: 22px;
+    border: 2px solid rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+    font-size: clamp(2.2rem, 7vw, 3.6rem);
     font-weight: 900;
-    pointer-events: none;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-appearance: none;
+  
+    backdrop-filter: blur(4px);
+  
+    box-shadow:
+      0 6px 18px rgba(0,0,0,0.25),
+      0 0 10px rgba(120,220,255,0.25);
+  
+    transition:
+      transform 0.07s ease,
+      background 0.07s ease,
+      box-shadow 0.07s ease,
+      border-color 0.07s ease;
+  
+    touch-action: manipulation;
   }
-
+  
+  .control-btn:active,
+  .control-btn.pressed {
+    transform: scale(0.86);
+    background: rgba(255,255,255,0.32);
+    border-color: rgba(255,255,255,0.9);
+  
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.25),
+      0 0 16px rgba(120,220,255,0.9);
+  }
+  
   .death-note {
     display: block;
     margin-top: 8px;
@@ -211,13 +245,6 @@
     line-height: 1.45;
     color: #c7ebff;
     opacity: 0.95;
-  }
-
-  @media (hover: none) and (pointer: coarse) {
-    #tapLeft, #tapRight {
-      pointer-events: auto;
-      opacity: 1;
-    }
   }
 </style>
 </head>
@@ -231,8 +258,10 @@
     <span id="speedLabel">Speed: 1.0x</span>
   </div>
 
-  <div id="tapLeft"><span class="tap-hint">◀</span></div>
-  <div id="tapRight"><span class="tap-hint">▶</span></div>
+  <div id="controls">
+    <button id="tapLeft" class="control-btn" aria-label="Move left">◀</button>
+    <button id="tapRight" class="control-btn" aria-label="Move right">▶</button>
+  </div>
 
   <div id="overlay">
     <h1>🌊 Endless Wave Racer</h1>
@@ -259,6 +288,7 @@ const overlayTitle = overlay.querySelector('h1');
 const overlayText = overlay.querySelector('p');
 const tapLeft = document.getElementById('tapLeft');
 const tapRight = document.getElementById('tapRight');
+const controls = document.getElementById('controls');
 const ui = document.getElementById('ui');
 
 // ───────────────── Audio ─────────────────
@@ -280,13 +310,9 @@ const restartSfx = new Audio('ewr-all-restarts.mp3');
 restartSfx.preload = 'auto';
 restartSfx.volume = 0.7;
 
-const moveSfxPool = Array.from({ length: 4 }, () => {
-  const a = new Audio('ewr-move.mp3');
-  a.preload = 'auto';
-  a.volume = 0.05;
-  return a;
-});
-let moveSfxIndex = 0;
+const moveSfxBase = new Audio('ewr-move.mp3');
+moveSfxBase.preload = 'auto';
+moveSfxBase.volume = 0.05;
 
 function safePlay(audio, restart = false) {
   if (restart) audio.currentTime = 0;
@@ -324,10 +350,20 @@ function playRestartSfx() {
 
 function playMoveSfx() {
   if (state !== 'playing') return;
-  const a = moveSfxPool[moveSfxIndex];
-  moveSfxIndex = (moveSfxIndex + 1) % moveSfxPool.length;
+
+  const now = performance.now();
+  if (now - lastMoveSoundTime < moveSoundCooldown) return;
+
+  lastMoveSoundTime = now;
+
+  const a = moveSfxBase.cloneNode();
+  a.volume = moveSfxBase.volume;
   a.currentTime = 0;
-  safePlay(a, true);
+
+  const p = a.play();
+  if (p && typeof p.catch === 'function') {
+    p.catch(() => {});
+  }
 }
 
 function resize() {
@@ -351,6 +387,17 @@ window.addEventListener('resize', () => {
   createWaveRows();
   if (state === 'dead') drawDeadScreen();
 });
+
+let controlPressMs = 90;
+let moveSoundCooldown = 70;
+let lastMoveSoundTime = 0;
+
+function flashControl(btn) {
+  btn.classList.add('pressed');
+  setTimeout(() => {
+    btn.classList.remove('pressed');
+  }, controlPressMs);
+}
 
 // ───────────────── State ─────────────────
 let state = 'idle';
